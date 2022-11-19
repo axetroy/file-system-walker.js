@@ -22,20 +22,20 @@ const walker = new FileSystemWalker("/path/to/folder");
 
 // walk file system synchronously (Not recommend)
 for (const entity of walker) {
-  console.log(walker.filepath, walker.stats);
+  console.log(entity.filepath, entity.stats);
 
   // breakable for walker
-  if (/node_modules/.test(walker.filepath)) {
+  if (/node_modules/.test(entity.filepath)) {
     break;
   }
 }
 
 // walk file system synchronously (recommend)
 for await (const entity of walker) {
-  console.log(walker.filepath, walker.stats);
+  console.log(entity.filepath, entity.stats);
 
   // breakable for walker
-  if (/node_modules/.test(walker.filepath)) {
+  if (/node_modules/.test(entity.filepath)) {
     break;
   }
 }
