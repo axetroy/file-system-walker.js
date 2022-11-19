@@ -20,8 +20,8 @@ import { FileSystemWalker } from "file-system-walker";
 
 const walker = new FileSystemWalker("/path/to/folder");
 
-// walk file system synchronously (Not recommend)
-for (const entity of walker) {
+// walk file system asynchronously (Recommend)
+for await (const entity of walker) {
   console.log(entity.filepath, entity.stats);
 
   // breakable for walker
@@ -30,8 +30,8 @@ for (const entity of walker) {
   }
 }
 
-// walk file system asynchronously (recommend)
-for await (const entity of walker) {
+// walk file system synchronously (Not recommend)
+for (const entity of walker) {
   console.log(entity.filepath, entity.stats);
 
   // breakable for walker
