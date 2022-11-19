@@ -1,0 +1,32 @@
+name: build
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        node: ["^18.7.0"]
+        os: [ubuntu-latest, macOS-latest, windows-latest]
+    name: node.js ${{ matrix.node }} test in ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node }}
+
+      - name: Install
+        run: npm i
+
+      - name: Compile
+        run: npm run build
+
+      - name: Publish
+        if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/') && startsWith(matrix.os, 'ubuntu') && github.repository == 'axetroy/file-system-walker.js'
+        run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
