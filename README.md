@@ -33,4 +33,4 @@ for await (const entity of walker) {
 
 ## License
 
-The [MIT License](https://github.com/axetroy/file-system-walker/blob/main/LICENSE)
+The [MIT License](LICENSE)
