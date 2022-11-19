@@ -5,7 +5,7 @@
   "type": "module",
   "main": "dist/index.js",
   "engines": {
-    "node": ">= 18.8.0"
+    "node": ">= 18.7.0"
   },
   "scripts": {
     "test": "npm run build && npx ts-node-test test/*.ts",

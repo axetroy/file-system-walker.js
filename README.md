@@ -2,7 +2,7 @@
 
 ![License](https://img.shields.io/badge/license-MIT-green.svg)
 [![Prettier](https://img.shields.io/badge/Code%20Style-Prettier-green.svg)](https://github.com/prettier/prettier)
-![Node](https://img.shields.io/badge/node-%3E=6.0-blue.svg?style=flat-square)
+![Node](https://img.shields.io/badge/node-%3E=18.7-blue.svg?style=flat-square)
 [![npm version](https://badge.fury.io/js/file-system-walker.svg)](https://badge.fury.io/js/file-system-walker)
 
 A modern file system walker lib for Nodejs.
