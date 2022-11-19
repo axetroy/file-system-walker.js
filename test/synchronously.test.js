@@ -12,7 +12,7 @@ test("walk synchronously", () => {
 
   const walker = new FileSystemWalker(dir);
 
-  const files: string[] = [];
+  const files = [];
 
   for (const entity of walker) {
     files.push(entity.filepath);
@@ -30,7 +30,7 @@ test("walk synchronously and breakable", () => {
 
   const walker = new FileSystemWalker(dir);
 
-  const files: string[] = [];
+  const files = [];
 
   for (const entity of walker) {
     files.push(entity.filepath);
@@ -47,7 +47,7 @@ test("walk synchronously and exclude with regexp", () => {
 
   const walker = new FileSystemWalker(dir, { exclude: /1/ });
 
-  const files: string[] = [];
+  const files = [];
 
   for (const entity of walker) {
     files.push(entity.filepath);
@@ -63,7 +63,7 @@ test("walk synchronously and exclude with function", () => {
     exclude: (filepath) => /1/.test(filepath),
   });
 
-  const files: string[] = [];
+  const files = [];
 
   for (const entity of walker) {
     files.push(entity.filepath);

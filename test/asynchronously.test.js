@@ -12,7 +12,7 @@ test("walk asynchronously", async () => {
 
   const walker = new FileSystemWalker(dir);
 
-  const files: string[] = [];
+  const files = [];
 
   for await (const entity of walker) {
     files.push(entity.filepath);
@@ -30,7 +30,7 @@ test("walk asynchronously and breakable", async () => {
 
   const walker = new FileSystemWalker(dir);
 
-  const files: string[] = [];
+  const files = [];
 
   for await (const entity of walker) {
     files.push(entity.filepath);
@@ -47,7 +47,7 @@ test("walk asynchronously and exclude with regexp", async () => {
 
   const walker = new FileSystemWalker(dir, { exclude: /1/ });
 
-  const files: string[] = [];
+  const files = [];
 
   for await (const entity of walker) {
     files.push(entity.filepath);
@@ -63,7 +63,7 @@ test("walk asynchronously and exclude with function", async () => {
     exclude: (filepath) => /1/.test(filepath),
   });
 
-  const files: string[] = [];
+  const files = [];
 
   for await (const entity of walker) {
     files.push(entity.filepath);
