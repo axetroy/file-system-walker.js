@@ -30,7 +30,7 @@ for (const entity of walker) {
   }
 }
 
-// walk file system synchronously (recommend)
+// walk file system asynchronously (recommend)
 for await (const entity of walker) {
   console.log(entity.filepath, entity.stats);
 
