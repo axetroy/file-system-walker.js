@@ -6,16 +6,25 @@ const stat = (filepath: string) => promisify(fs.stat)(filepath);
 const readdir = (filepath: string) => promisify(fs.readdir)(filepath);
 
 export interface FileSystemWalkerEntity {
+  /**
+   * The file path of walk entity
+   */
   filepath: string;
+  /**
+   * The file status of walk entity
+   */
   stats: fs.Stats;
 }
 
 export interface FileSystemWalkerOptions {
+  /**
+   * Define the exclude when walk in
+   */
   exclude?: RegExp | ((filepath: string, stat: fs.Stats) => boolean);
 }
 
 /**
- * Walk a folder
+ * Traverse into file system
  * @example
  * ```ts
  * // walk file system in async
