@@ -41,6 +41,22 @@ for (const entity of walker) {
 }
 ```
 
+### API
+
+#### new FileSystemWalker(filepath)
+
+Generate a traversable object which can use with `for ... of` and `for await ... of`
+
+#### new FileSystemWalker(filepath, options?)
+
+Generate a traversable object which can use with `for ... of` and `for await ... of` with options
+
+##### options.exclude:
+
+Type: RegExp | (filepath: string, stats: fs.Stats) => boolean
+
+Default: undefined
+
 ## License
 
 The [MIT License](LICENSE)
