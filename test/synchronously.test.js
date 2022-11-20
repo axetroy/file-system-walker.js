@@ -131,3 +131,26 @@ test("walk asynchronously and set maxDeep=2", () => {
     path.join(dir, "11", "22"),
   ]);
 });
+
+test("walk asynchronously and set maxDeep=2 and assets deep", () => {
+  const dir = path.join(__dirname, "..", "fixtures", "walk and set max deep");
+
+  const walker = new FileSystemWalker(dir, {
+    maxDeep: 2,
+  });
+
+  const files = [];
+
+  for (const entity of walker) {
+    files.push([entity.filepath, entity.deep]);
+  }
+
+  assert.deepEqual(files, [
+    [path.join(dir), 0],
+    [path.join(dir, "01"), 1],
+    [path.join(dir, "02"), 1],
+    [path.join(dir, "11"), 1],
+    [path.join(dir, "11", "111"), 2],
+    [path.join(dir, "11", "22"), 2],
+  ]);
+});

@@ -22,7 +22,7 @@ const walker = new FileSystemWalker("/path/to/folder");
 
 // walk file system asynchronously (Recommend)
 for await (const entity of walker) {
-  console.log(entity.filepath, entity.stats);
+  console.log(entity.filepath, entity.stats, entity.deep);
 
   // breakable for walker
   if (/node_modules/.test(entity.filepath)) {
@@ -32,7 +32,7 @@ for await (const entity of walker) {
 
 // walk file system synchronously (Not recommend)
 for (const entity of walker) {
-  console.log(entity.filepath, entity.stats);
+  console.log(entity.filepath, entity.stats, entity.deep);
 
   // breakable for walker
   if (/node_modules/.test(entity.filepath)) {
@@ -63,6 +63,25 @@ export interface FileSystemWalkerOptions {
    * @default undefined
    */
   maxDeep?: number;
+}
+```
+
+Entity:
+
+```ts
+export interface FileSystemWalkerEntity {
+  /**
+   * The file path of walk entity
+   */
+  filepath: string;
+  /**
+   * The file status of walk entity
+   */
+  stats: fs.Stats;
+  /**
+   * The deep of the traverse. The root is zero
+   */
+  deep: number;
 }
 ```
 

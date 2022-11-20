@@ -13,6 +13,10 @@ export interface FileSystemWalkerEntity {
    * The file status of walk entity
    */
   stats: fs.Stats;
+  /**
+   * The deep of the traverse. The root is zero
+   */
+  deep: number;
 }
 
 export interface FileSystemWalkerOptions {
@@ -118,7 +122,7 @@ export class FileSystemWalker {
       return;
     }
 
-    yield { filepath: dir, stats: folderStat };
+    yield { filepath: dir, stats: folderStat, deep: this[deepSymbol] };
 
     if (this.#isOverflowMaxDeep()) {
       return;
@@ -139,7 +143,11 @@ export class FileSystemWalker {
           yield item;
         }
       } else {
-        yield { filepath: filepath, stats: fileStats };
+        yield {
+          filepath: filepath,
+          stats: fileStats,
+          deep: this[deepSymbol] + 1,
+        };
       }
     }
   }
@@ -153,7 +161,7 @@ export class FileSystemWalker {
       return;
     }
 
-    yield { filepath: dir, stats: folderStat };
+    yield { filepath: dir, stats: folderStat, deep: this[deepSymbol] };
 
     if (this.#isOverflowMaxDeep()) {
       return;
@@ -174,7 +182,11 @@ export class FileSystemWalker {
           yield item;
         }
       } else {
-        yield { filepath: filepath, stats: fileStats };
+        yield {
+          filepath: filepath,
+          stats: fileStats,
+          deep: this[deepSymbol] + 1,
+        };
       }
     }
   }
