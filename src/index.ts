@@ -2,6 +2,8 @@ import fs from "node:fs";
 import fsPromises from "node:fs/promises";
 import path from "node:path";
 
+const deepSymbol = Symbol("[Deep]");
+
 export interface FileSystemWalkerEntity {
   /**
    * The file path of walk entity
@@ -16,8 +18,16 @@ export interface FileSystemWalkerEntity {
 export interface FileSystemWalkerOptions {
   /**
    * Define the exclude when walk in
+   * @default undefined
    */
   exclude?: RegExp | ((filepath: string, stat: fs.Stats) => boolean);
+  /**
+   * only travel to max depth.
+   * @example `maxDeep=0 mean emit root dir only`
+   * @example `maxDeep=1 mean emit the file/folder of root`
+   * @default undefined
+   */
+  maxDeep?: number;
 }
 
 /**
@@ -44,9 +54,11 @@ export interface FileSystemWalkerOptions {
  */
 export class FileSystemWalker {
   #filepath: string;
-  #options?: FileSystemWalkerOptions;
+  #options: FileSystemWalkerOptions;
 
-  constructor(filepath: string, options?: FileSystemWalkerOptions) {
+  private [deepSymbol] = 0;
+
+  constructor(filepath: string, options: FileSystemWalkerOptions = {}) {
     this.#filepath = filepath;
     this.#options = options;
   }
@@ -73,9 +85,32 @@ export class FileSystemWalker {
     return false;
   }
 
+  #isOverflowMaxDeep() {
+    if (typeof this.#options.maxDeep === "number") {
+      return this[deepSymbol] >= this.#options.maxDeep;
+    }
+
+    return false;
+  }
+
+  /**
+   * Get the next level walker
+   * @param filename
+   * @returns
+   */
+  #next(filename: string): FileSystemWalker {
+    const nextWalker = new FileSystemWalker(
+      path.join(this.#filepath, filename),
+      this.#options
+    );
+
+    nextWalker[deepSymbol] = this[deepSymbol] + 1;
+
+    return nextWalker;
+  }
+
   async *[Symbol.asyncIterator](): AsyncGenerator<FileSystemWalkerEntity> {
     const dir = this.#filepath;
-    const options = this.#options;
 
     const folderStat = await fsPromises.stat(dir);
 
@@ -84,6 +119,10 @@ export class FileSystemWalker {
     }
 
     yield { filepath: dir, stats: folderStat };
+
+    if (this.#isOverflowMaxDeep()) {
+      return;
+    }
 
     const dirs = await fsPromises.readdir(dir);
 
@@ -96,7 +135,7 @@ export class FileSystemWalker {
       }
 
       if (fileStats.isDirectory()) {
-        for await (const item of new FileSystemWalker(filepath, options)) {
+        for await (const item of this.#next(fileName)) {
           yield item;
         }
       } else {
@@ -107,7 +146,6 @@ export class FileSystemWalker {
 
   *[Symbol.iterator](): Generator<FileSystemWalkerEntity> {
     const dir = this.#filepath;
-    const options = this.#options;
 
     const folderStat = fs.statSync(dir);
 
@@ -116,6 +154,10 @@ export class FileSystemWalker {
     }
 
     yield { filepath: dir, stats: folderStat };
+
+    if (this.#isOverflowMaxDeep()) {
+      return;
+    }
 
     const dirs = fs.readdirSync(dir);
 
@@ -128,7 +170,7 @@ export class FileSystemWalker {
       }
 
       if (fileStats.isDirectory()) {
-        for (const item of new FileSystemWalker(filepath, options)) {
+        for (const item of this.#next(fileName)) {
           yield item;
         }
       } else {

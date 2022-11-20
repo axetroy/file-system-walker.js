@@ -43,19 +43,28 @@ for (const entity of walker) {
 
 ### API
 
-#### new FileSystemWalker(filepath)
+#### new FileSystemWalker(filepath, \[options\])
 
 Generate a traversable object which can use with `for ... of` and `for await ... of`
 
-#### new FileSystemWalker(filepath, options?)
+Options:
 
-Generate a traversable object which can use with `for ... of` and `for await ... of` with options
-
-##### options.exclude:
-
-Type: RegExp | (filepath: string, stats: fs.Stats) => boolean
-
-Default: undefined
+```ts
+export interface FileSystemWalkerOptions {
+  /**
+   * Define the exclude when walk in
+   * @default undefined
+   */
+  exclude?: RegExp | ((filepath: string, stat: fs.Stats) => boolean);
+  /**
+   * only travel to max depth.
+   * @example `maxDeep=0 mean emit root dir only`
+   * @example `maxDeep=1 mean emit the file/folder of root`
+   * @default undefined
+   */
+  maxDeep?: number;
+}
+```
 
 ## License
 

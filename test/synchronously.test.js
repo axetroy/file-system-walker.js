@@ -71,3 +71,63 @@ test("walk synchronously and exclude with function", () => {
 
   assert.deepEqual(files, [path.join(dir), path.join(dir, "02")]);
 });
+
+test("walk asynchronously and set maxDeep=0", () => {
+  const dir = path.join(__dirname, "..", "fixtures", "walk and set max deep");
+
+  const walker = new FileSystemWalker(dir, {
+    maxDeep: 0,
+  });
+
+  const files = [];
+
+  for (const entity of walker) {
+    files.push(entity.filepath);
+  }
+
+  assert.deepEqual(files, [path.join(dir)]);
+});
+
+test("walk asynchronously and set maxDeep=1", () => {
+  const dir = path.join(__dirname, "..", "fixtures", "walk and set max deep");
+
+  const walker = new FileSystemWalker(dir, {
+    maxDeep: 1,
+  });
+
+  const files = [];
+
+  for (const entity of walker) {
+    files.push(entity.filepath);
+  }
+
+  assert.deepEqual(files, [
+    path.join(dir),
+    path.join(dir, "01"),
+    path.join(dir, "02"),
+    path.join(dir, "11"),
+  ]);
+});
+
+test("walk asynchronously and set maxDeep=2", () => {
+  const dir = path.join(__dirname, "..", "fixtures", "walk and set max deep");
+
+  const walker = new FileSystemWalker(dir, {
+    maxDeep: 2,
+  });
+
+  const files = [];
+
+  for (const entity of walker) {
+    files.push(entity.filepath);
+  }
+
+  assert.deepEqual(files, [
+    path.join(dir),
+    path.join(dir, "01"),
+    path.join(dir, "02"),
+    path.join(dir, "11"),
+    path.join(dir, "11", "111"),
+    path.join(dir, "11", "22"),
+  ]);
+});
