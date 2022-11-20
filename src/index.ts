@@ -1,9 +1,6 @@
 import fs from "node:fs";
-import { promisify } from "node:util";
+import fsPromises from "node:fs/promises";
 import path from "node:path";
-
-const stat = (filepath: string) => promisify(fs.stat)(filepath);
-const readdir = (filepath: string) => promisify(fs.readdir)(filepath);
 
 export interface FileSystemWalkerEntity {
   /**
@@ -26,16 +23,19 @@ export interface FileSystemWalkerOptions {
 /**
  * Traverse into file system
  * @example
+ *
+ * Walk file system synchronously
+ *
  * ```ts
- * // walk file system in async
  * const walker = FileSystemWalker('/path/to/folder')
  * for await (const entity of walker) {
  *   console.log(entity.filepath, entity.stats)
  * }
  * ```
  *
+ * Walk file system asynchronously
+ *
  * ```js
- * // walk file in sync
  * const walker = FileSystemWalker('/path/to/folder')
  * for await (const entity of walker) {
  *   console.log(entity.filepath, entity.stats)
@@ -77,7 +77,7 @@ export class FileSystemWalker {
     const dir = this.#filepath;
     const options = this.#options;
 
-    const folderStat = await stat(dir);
+    const folderStat = await fsPromises.stat(dir);
 
     if (this.#isExclude(dir, folderStat)) {
       return;
@@ -85,11 +85,11 @@ export class FileSystemWalker {
 
     yield { filepath: dir, stats: folderStat };
 
-    const dirs = await readdir(dir);
+    const dirs = await fsPromises.readdir(dir);
 
     for (const fileName of dirs) {
       const filepath = path.resolve(dir, fileName);
-      const fileStats = await stat(filepath);
+      const fileStats = await fsPromises.stat(filepath);
 
       if (this.#isExclude(filepath, fileStats)) {
         continue;
