@@ -63,6 +63,11 @@ export interface FileSystemWalkerOptions {
    * @default undefined
    */
   maxDeep?: number;
+  /**
+   * Whether follow the Symlinks
+   * @default false
+   */
+  followSymlinks?: boolean;
 }
 ```
 

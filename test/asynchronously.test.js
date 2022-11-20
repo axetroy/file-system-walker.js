@@ -154,3 +154,57 @@ test("walk asynchronously and set maxDeep=2 and assets deep", async () => {
     [path.join(dir, "11", "22"), 2],
   ]);
 });
+
+test("walk and follow symlinks file", async () => {
+  const dir = path.join(
+    __dirname,
+    "..",
+    "fixtures",
+    "walk and follow symlinks file"
+  );
+
+  const walker = new FileSystemWalker(dir, { followSymlinks: true });
+
+  const files = [];
+
+  for await (const entity of walker) {
+    files.push(entity.filepath);
+  }
+
+  assert.deepEqual(files, [
+    path.join(dir),
+    path.join(dir, "01"),
+    path.join(dir, "02"),
+    path.join(dir, "03"),
+    path.join(__dirname, "..", "fixtures", "walk", "01"),
+  ]);
+});
+
+test("walk and follow symlinks folder", async () => {
+  const dir = path.join(
+    __dirname,
+    "..",
+    "fixtures",
+    "walk and follow symlinks folder"
+  );
+
+  const walker = new FileSystemWalker(dir, { followSymlinks: true });
+
+  const files = [];
+
+  for await (const entity of walker) {
+    files.push(entity.filepath);
+  }
+
+  assert.deepEqual(files, [
+    path.join(dir),
+    path.join(dir, "01"),
+    path.join(dir, "02"),
+    path.join(dir, "03"),
+    path.join(__dirname, "..", "fixtures", "walk and exclude"),
+    path.join(__dirname, "..", "fixtures", "walk and exclude", "01"),
+    path.join(__dirname, "..", "fixtures", "walk and exclude", "02"),
+    path.join(__dirname, "..", "fixtures", "walk and exclude", "11"),
+    path.join(__dirname, "..", "fixtures", "walk and exclude", "11", "111"),
+  ]);
+});

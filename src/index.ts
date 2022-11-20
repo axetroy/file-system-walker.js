@@ -2,7 +2,7 @@ import fs from "node:fs";
 import fsPromises from "node:fs/promises";
 import path from "node:path";
 
-const deepSymbol = Symbol("[Deep]");
+const deepSymbol = Symbol("[[Deep]]");
 
 export interface FileSystemWalkerEntity {
   /**
@@ -32,6 +32,11 @@ export interface FileSystemWalkerOptions {
    * @default undefined
    */
   maxDeep?: number;
+  /**
+   * Whether follow the Symlinks
+   * @default false
+   */
+  followSymlinks?: boolean;
 }
 
 /**
@@ -97,14 +102,35 @@ export class FileSystemWalker {
     return false;
   }
 
+  async #readlink(linkPath: string): Promise<string> {
+    const p = await fsPromises.readlink(linkPath);
+
+    if (path.isAbsolute(p)) {
+      return p;
+    } else {
+      return path.resolve(p);
+    }
+  }
+
+  #readlinkSync(linkPath: string): string {
+    const p = fs.readlinkSync(linkPath);
+
+    if (path.isAbsolute(p)) {
+      return p;
+    } else {
+      return path.resolve(p);
+    }
+  }
+
   /**
    * Get the next level walker
    * @param filename
+   * @param dir
    * @returns
    */
-  #next(filename: string): FileSystemWalker {
+  #next(filename: string, dir: string): FileSystemWalker {
     const nextWalker = new FileSystemWalker(
-      path.join(this.#filepath, filename),
+      path.join(dir, filename),
       this.#options
     );
 
@@ -114,9 +140,12 @@ export class FileSystemWalker {
   }
 
   async *[Symbol.asyncIterator](): AsyncGenerator<FileSystemWalkerEntity> {
-    const dir = this.#filepath;
+    let dir = this.#filepath;
+    const { followSymlinks } = this.#options;
 
-    const folderStat = await fsPromises.stat(dir);
+    const stat = fsPromises.lstat;
+
+    const folderStat = await stat(dir);
 
     if (this.#isExclude(dir, folderStat)) {
       return;
@@ -128,18 +157,38 @@ export class FileSystemWalker {
       return;
     }
 
+    dir =
+      followSymlinks && folderStat.isSymbolicLink()
+        ? await this.#readlink(dir)
+        : dir;
+
     const dirs = await fsPromises.readdir(dir);
 
-    for (const fileName of dirs) {
-      const filepath = path.resolve(dir, fileName);
-      const fileStats = await fsPromises.stat(filepath);
+    for (let fileName of dirs) {
+      let filepath = path.resolve(dir, fileName);
+      let fileStats = await stat(filepath);
 
       if (this.#isExclude(filepath, fileStats)) {
         continue;
       }
 
+      if (followSymlinks && fileStats.isSymbolicLink()) {
+        const originFilePath = filepath;
+        const originFileStats = fileStats;
+
+        filepath = await this.#readlink(filepath);
+        fileStats = await stat(filepath);
+        fileName = path.basename(filepath);
+
+        yield {
+          filepath: originFilePath,
+          stats: originFileStats,
+          deep: this[deepSymbol] + 1,
+        };
+      }
+
       if (fileStats.isDirectory()) {
-        for await (const item of this.#next(fileName)) {
+        for await (const item of this.#next(fileName, path.dirname(filepath))) {
           yield item;
         }
       } else {
@@ -153,9 +202,12 @@ export class FileSystemWalker {
   }
 
   *[Symbol.iterator](): Generator<FileSystemWalkerEntity> {
-    const dir = this.#filepath;
+    let dir = this.#filepath;
+    const { followSymlinks } = this.#options;
 
-    const folderStat = fs.statSync(dir);
+    const stat = fs.lstatSync;
+
+    const folderStat = stat(dir);
 
     if (this.#isExclude(dir, folderStat)) {
       return;
@@ -167,18 +219,38 @@ export class FileSystemWalker {
       return;
     }
 
+    dir =
+      followSymlinks && folderStat.isSymbolicLink()
+        ? this.#readlinkSync(dir)
+        : dir;
+
     const dirs = fs.readdirSync(dir);
 
-    for (const fileName of dirs) {
-      const filepath = path.resolve(dir, fileName);
-      const fileStats = fs.statSync(filepath);
+    for (let fileName of dirs) {
+      let filepath = path.resolve(dir, fileName);
+      let fileStats = stat(filepath);
 
       if (this.#isExclude(filepath, fileStats)) {
         continue;
       }
 
+      if (followSymlinks && fileStats.isSymbolicLink()) {
+        const originFilePath = filepath;
+        const originFileStats = fileStats;
+
+        filepath = this.#readlinkSync(filepath);
+        fileStats = stat(filepath);
+        fileName = path.basename(filepath);
+
+        yield {
+          filepath: originFilePath,
+          stats: originFileStats,
+          deep: this[deepSymbol] + 1,
+        };
+      }
+
       if (fileStats.isDirectory()) {
-        for (const item of this.#next(fileName)) {
+        for (const item of this.#next(fileName, path.dirname(filepath))) {
           yield item;
         }
       } else {
