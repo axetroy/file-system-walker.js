@@ -1,7 +1,7 @@
 # file-system-walker
 
-![License](https://img.shields.io/badge/license-MIT-green.svg)
-[![Prettier](https://img.shields.io/badge/Code%20Style-Prettier-green.svg)](https://github.com/prettier/prettier)
+[![Badge](https://img.shields.io/badge/link-996.icu-%23FF4D5B.svg?style=flat-square)](https://996.icu/#/en_US)
+[![LICENSE](https://img.shields.io/badge/license-Anti%20996-blue.svg?style=flat-square)](https://github.com/996icu/996.ICU/blob/master/LICENSE)
 ![Node](https://img.shields.io/badge/node-%3E=18.7-blue.svg?style=flat-square)
 [![npm version](https://badge.fury.io/js/file-system-walker.svg)](https://badge.fury.io/js/file-system-walker)
 
@@ -59,4 +59,4 @@ Default: undefined
 
 ## License
 
-The [MIT License](LICENSE)
+The [Anti 996 License](LICENSE)
