@@ -7,7 +7,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        node: ["^18.7.0"]
+        node: ["18", "16"]
         os: [ubuntu-latest, macOS-latest, windows-latest]
     name: node.js ${{ matrix.node }} test in ${{ matrix.os }}
     steps:
