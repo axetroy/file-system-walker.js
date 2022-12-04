@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "rootDirs": ["src"],
+    "moduleResolution": "Node",
+    "target": "ES2018",
+    "lib": ["ESNext"],
+    "sourceMap": true,
+    "declaration": true,
+    "allowSyntheticDefaultImports": true,
+  },
+  "exclude": ["node_modules", "test", "dist"]
+}

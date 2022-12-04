@@ -1,11 +1,8 @@
-import assert from "node:assert";
-import test from "node:test";
-import path from "node:path";
-import url from "node:url";
+const assert = require("node:assert");
+const test = require("node:test");
+const path = require("node:path");
 
-import { FileSystemWalker } from "../dist/index.js";
-
-const __dirname = url.fileURLToPath(new URL(".", import.meta.url));
+const { FileSystemWalker } = require("../dist/cjs/index.js");
 
 test("walk asynchronously", async () => {
   const dir = path.join(__dirname, "..", "fixtures", "walk");
