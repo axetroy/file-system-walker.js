@@ -18,8 +18,7 @@
     "build": "npm run build:esm && npm run build:cjs",
     "build:esm": "tsc -p ./tsconfig.json",
     "build:cjs": "tsc -p ./tsconfig.cjs.json",
-    "watch": "tsc -p ./ --watch",
-    "postinstall": "npm run build"
+    "watch": "tsc -p ./ --watch"
   },
   "files": [
     "dist"
