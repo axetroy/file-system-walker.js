@@ -18,6 +18,7 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node }}
+          registry-url: "https://registry.npmjs.org"
 
       - name: Install
         run: npm i
@@ -27,6 +28,7 @@ jobs:
 
       - name: Publish npm package
         if: startsWith(github.ref, 'refs/tags/') && startsWith(matrix.os, 'ubuntu') && github.repository == 'axetroy/file-system-walker.js'
-        run: node script/publish.js
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: npx semantic-release
