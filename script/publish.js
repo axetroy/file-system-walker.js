@@ -4,10 +4,11 @@
  * NODE_AUTH_TOKEN=npm_xxxxx node npm/publish.js
  */
 
+const path = require("path");
 const spawn = require("child_process").spawn;
 
 async function main() {
-  const cwd = __dirname;
+  const cwd = path.join(__dirname, '..');
 
   await new Promise((resolve, reject) => {
     const ps = spawn(
