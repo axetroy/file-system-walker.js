@@ -1,6 +1,6 @@
 {
   "name": "file-system-walker",
-  "version": "1.0.6",
+  "version": "1.0.5",
   "description": "A modern file system walker for Nodejs",
   "type": "commonjs",
   "main": "dist/cjs/index.js",
