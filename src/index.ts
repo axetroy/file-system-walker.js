@@ -1,6 +1,6 @@
-import fs from "node:fs";
-import fsPromises from "node:fs/promises";
-import path from "node:path";
+import fs from "fs";
+import fsPromises from "fs/promises";
+import path from "path";
 
 const deepSymbol = Symbol("[[Deep]]");
 
