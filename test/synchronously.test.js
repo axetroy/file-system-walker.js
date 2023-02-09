@@ -1,6 +1,6 @@
-const assert = require("assert");
-const test = require("test");
-const path = require("path");
+const assert = require("node:assert");
+const test = require("node:test");
+const path = require("node:path");
 
 const { FileSystemWalker } = require("../dist/cjs/index.js");
 
