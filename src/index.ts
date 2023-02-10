@@ -1,8 +1,11 @@
 import fs from "fs";
-import fsPromises from "fs/promises";
 import path from "path";
+import { promisify } from "util";
 
 const deepSymbol = Symbol("[[Deep]]");
+const readlink = promisify(fs.readlink)
+const lstat = promisify(fs.lstat)
+const readdir = promisify(fs.readdir)
 
 export interface FileSystemWalkerEntity {
   /**
@@ -103,7 +106,7 @@ export class FileSystemWalker {
   }
 
   async #readlink(linkPath: string): Promise<string> {
-    const p = await fsPromises.readlink(linkPath);
+    const p = await readlink(linkPath);
 
     if (path.isAbsolute(p)) {
       return p;
@@ -143,9 +146,7 @@ export class FileSystemWalker {
     let dir = this.#filepath;
     const { followSymlinks } = this.#options;
 
-    const stat = fsPromises.lstat;
-
-    const folderStat = await stat(dir);
+    const folderStat = await lstat(dir);
 
     if (this.#isExclude(dir, folderStat)) {
       return;
@@ -162,11 +163,11 @@ export class FileSystemWalker {
         ? await this.#readlink(dir)
         : dir;
 
-    const dirs = await fsPromises.readdir(dir);
+    const dirs = await readdir(dir);
 
     for (let fileName of dirs) {
       let filepath = path.resolve(dir, fileName);
-      let fileStats = await stat(filepath);
+      let fileStats = await lstat(filepath);
 
       if (this.#isExclude(filepath, fileStats)) {
         continue;
@@ -177,7 +178,7 @@ export class FileSystemWalker {
         const originFileStats = fileStats;
 
         filepath = await this.#readlink(filepath);
-        fileStats = await stat(filepath);
+        fileStats = await lstat(filepath);
         fileName = path.basename(filepath);
 
         yield {
