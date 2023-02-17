@@ -50,7 +50,7 @@ export interface FileSystemWalkerOptions {
  *
  * ```ts
  * const walker = FileSystemWalker('/path/to/folder')
- * for await (const entity of walker) {
+ * for (const entity of walker) {
  *   console.log(entity.filepath, entity.stats)
  * }
  * ```
