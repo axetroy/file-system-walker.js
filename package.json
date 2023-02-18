@@ -3,10 +3,12 @@
   "version": "1.0.12",
   "description": "A modern file system walker for Nodejs",
   "type": "commonjs",
-  "main": "dist/cjs/index.js",
   "engines": {
     "node": ">= 14"
   },
+  "types": "dist/cjs/index.d.ts",
+  "main": "dist/cjs/index.js",
+  "module": "dist/esm/index.js",
   "exports": {
     ".": {
       "require": "./dist/cjs/index.js",
