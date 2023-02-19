@@ -3,9 +3,9 @@ import path from "path";
 import { promisify } from "util";
 
 const deepSymbol = Symbol("[[Deep]]");
-const readlink = promisify(fs.readlink)
-const lstat = promisify(fs.lstat)
-const readdir = promisify(fs.readdir)
+const readlink = promisify(fs.readlink);
+const lstat = promisify(fs.lstat);
+const readdir = promisify(fs.readdir);
 
 export interface FileSystemWalkerEntity {
   /**
