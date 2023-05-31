@@ -16,7 +16,7 @@
     }
   },
   "scripts": {
-    "test": "npm run build && node --test test",
+    "test": "node --loader tsx --test **/*.test.ts",
     "build": "npm run build:esm && npm run build:cjs",
     "build:esm": "tsc -p ./tsconfig.json",
     "build:cjs": "tsc -p ./tsconfig.cjs.json",
@@ -42,6 +42,7 @@
   "homepage": "https://github.com/axetroy/file-system-walker.js#readme",
   "devDependencies": {
     "@types/node": "^18.15.3",
+    "tsx": "^3.12.7",
     "typescript": "^5.0.2"
   },
   "private": false

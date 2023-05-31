@@ -1,17 +1,16 @@
-const assert = require("node:assert");
-const test = require("node:test");
-const path = require("node:path");
+import path from "node:path";
+import test from "node:test";
+import assert from "node:assert";
+import { FileSystemWalker } from "../src/index";
 
-const { FileSystemWalker } = require("../dist/cjs/index.js");
-
-test("walk asynchronously", async () => {
+test("walk synchronously", () => {
   const dir = path.join(__dirname, "..", "fixtures", "walk");
 
   const walker = new FileSystemWalker(dir);
 
-  const files = [];
+  const files: Array<string> = [];
 
-  for await (const entity of walker) {
+  for (const entity of walker) {
     files.push(entity.filepath);
   }
 
@@ -22,14 +21,14 @@ test("walk asynchronously", async () => {
   ]);
 });
 
-test("walk asynchronously and breakable", async () => {
+test("walk synchronously and breakable", () => {
   const dir = path.join(__dirname, "..", "fixtures", "walk and breakable");
 
   const walker = new FileSystemWalker(dir);
 
-  const files = [];
+  const files: Array<string> = [];
 
-  for await (const entity of walker) {
+  for (const entity of walker) {
     files.push(entity.filepath);
     if (/01/.test(entity.filepath)) {
       break;
@@ -39,62 +38,62 @@ test("walk asynchronously and breakable", async () => {
   assert.deepEqual(files, [path.join(dir), path.join(dir, "01")]);
 });
 
-test("walk asynchronously and exclude with regexp", async () => {
+test("walk synchronously and exclude with regexp", () => {
   const dir = path.join(__dirname, "..", "fixtures", "walk and exclude");
 
   const walker = new FileSystemWalker(dir, { exclude: /1/ });
 
-  const files = [];
+  const files: Array<string> = [];
 
-  for await (const entity of walker) {
+  for (const entity of walker) {
     files.push(entity.filepath);
   }
 
   assert.deepEqual(files, [path.join(dir), path.join(dir, "02")]);
 });
 
-test("walk asynchronously and exclude with function", async () => {
+test("walk synchronously and exclude with function", () => {
   const dir = path.join(__dirname, "..", "fixtures", "walk and exclude");
 
   const walker = new FileSystemWalker(dir, {
     exclude: (filepath) => /1/.test(filepath),
   });
 
-  const files = [];
+  const files: Array<string> = [];
 
-  for await (const entity of walker) {
+  for (const entity of walker) {
     files.push(entity.filepath);
   }
 
   assert.deepEqual(files, [path.join(dir), path.join(dir, "02")]);
 });
 
-test("walk asynchronously and set maxDeep=0", async () => {
+test("walk asynchronously and set maxDeep=0", () => {
   const dir = path.join(__dirname, "..", "fixtures", "walk and set max deep");
 
   const walker = new FileSystemWalker(dir, {
     maxDeep: 0,
   });
 
-  const files = [];
+  const files: Array<string> = [];
 
-  for await (const entity of walker) {
+  for (const entity of walker) {
     files.push(entity.filepath);
   }
 
   assert.deepEqual(files, [path.join(dir)]);
 });
 
-test("walk asynchronously and set maxDeep=1", async () => {
+test("walk asynchronously and set maxDeep=1", () => {
   const dir = path.join(__dirname, "..", "fixtures", "walk and set max deep");
 
   const walker = new FileSystemWalker(dir, {
     maxDeep: 1,
   });
 
-  const files = [];
+  const files: Array<string> = [];
 
-  for await (const entity of walker) {
+  for (const entity of walker) {
     files.push(entity.filepath);
   }
 
@@ -106,16 +105,16 @@ test("walk asynchronously and set maxDeep=1", async () => {
   ]);
 });
 
-test("walk asynchronously and set maxDeep=2", async () => {
+test("walk asynchronously and set maxDeep=2", () => {
   const dir = path.join(__dirname, "..", "fixtures", "walk and set max deep");
 
   const walker = new FileSystemWalker(dir, {
     maxDeep: 2,
   });
 
-  const files = [];
+  const files: Array<string> = [];
 
-  for await (const entity of walker) {
+  for (const entity of walker) {
     files.push(entity.filepath);
   }
 
@@ -129,16 +128,16 @@ test("walk asynchronously and set maxDeep=2", async () => {
   ]);
 });
 
-test("walk asynchronously and set maxDeep=2 and assets deep", async () => {
+test("walk asynchronously and set maxDeep=2 and assets deep", () => {
   const dir = path.join(__dirname, "..", "fixtures", "walk and set max deep");
 
   const walker = new FileSystemWalker(dir, {
     maxDeep: 2,
   });
 
-  const files = [];
+  const files: Array<[string, number]> = [];
 
-  for await (const entity of walker) {
+  for (const entity of walker) {
     files.push([entity.filepath, entity.deep]);
   }
 
@@ -152,7 +151,7 @@ test("walk asynchronously and set maxDeep=2 and assets deep", async () => {
   ]);
 });
 
-test("walk and follow symlinks file", async () => {
+test("walk and follow symlinks file", () => {
   const dir = path.join(
     __dirname,
     "..",
@@ -162,9 +161,9 @@ test("walk and follow symlinks file", async () => {
 
   const walker = new FileSystemWalker(dir, { followSymlinks: true });
 
-  const files = [];
+  const files: Array<string> = [];
 
-  for await (const entity of walker) {
+  for (const entity of walker) {
     files.push(entity.filepath);
   }
 
@@ -177,7 +176,7 @@ test("walk and follow symlinks file", async () => {
   ]);
 });
 
-test("walk and follow symlinks folder", async () => {
+test("walk and follow symlinks folder", () => {
   const dir = path.join(
     __dirname,
     "..",
@@ -187,9 +186,9 @@ test("walk and follow symlinks folder", async () => {
 
   const walker = new FileSystemWalker(dir, { followSymlinks: true });
 
-  const files = [];
+  const files: Array<string> = [];
 
-  for await (const entity of walker) {
+  for (const entity of walker) {
     files.push(entity.filepath);
   }
 
