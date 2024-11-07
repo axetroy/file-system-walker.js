@@ -2,17 +2,32 @@
   "name": "file-system-walker",
   "version": "1.0.15",
   "description": "A modern file system walker for Nodejs",
-  "type": "commonjs",
   "engines": {
     "node": ">= 14"
   },
-  "types": "dist/cjs/index.d.ts",
-  "main": "dist/cjs/index.js",
+  "main": "./dist/cjs/index.js",
+  "module": "./dist/esm/index.js",
+  "exports": {
+    "./package.json": {
+      "import": "./package.json",
+      "require": "./package.json"
+    },
+    ".": {
+      "require": {
+        "default": "./dist/cjs/index.cjs",
+        "types": "./dist/cjs/index.d.ts"
+      },
+      "import": {
+        "default": "./dist/esm/index.mjs",
+        "types": "./dist/esm/index.d.ts"
+      }
+    }
+  },
   "scripts": {
     "test": "node --import tsx --test **/*.test.ts",
     "build": "npm run build:esm && npm run build:cjs",
-    "build:esm": "tsc -p ./tsconfig.esm.json",
-    "build:cjs": "tsc -p ./tsconfig.cjs.json",
+    "build:esm": "tsc -p ./tsconfig.esm.json && node script/covert2mjs.cjs",
+    "build:cjs": "tsc -p ./tsconfig.cjs.json && node script/covert2cjs.cjs",
     "watch": "tsc -p ./ --watch"
   },
   "files": [
