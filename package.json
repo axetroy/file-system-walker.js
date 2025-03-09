@@ -14,11 +14,11 @@
     },
     ".": {
       "require": {
-        "default": "./dist/cjs/index.cjs",
+        "default": "./dist/cjs/index.js",
         "types": "./dist/cjs/index.d.ts"
       },
       "import": {
-        "default": "./dist/esm/index.mjs",
+        "default": "./dist/esm/index.js",
         "types": "./dist/esm/index.d.ts"
       }
     }
@@ -26,8 +26,8 @@
   "scripts": {
     "test": "node --import tsx --test **/*.test.ts",
     "build": "npm run build:esm && npm run build:cjs",
-    "build:esm": "tsc -p ./tsconfig.esm.json && node script/covert2mjs.cjs",
-    "build:cjs": "tsc -p ./tsconfig.cjs.json && node script/covert2cjs.cjs",
+    "build:esm": "tsc -p ./tsconfig.esm.json",
+    "build:cjs": "tsc -p ./tsconfig.cjs.json",
     "watch": "tsc -p ./ --watch"
   },
   "files": [

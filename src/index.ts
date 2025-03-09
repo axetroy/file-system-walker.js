@@ -68,6 +68,7 @@ export class FileSystemWalker {
   #filepath: string;
   #options: FileSystemWalkerOptions;
 
+  /** @internal  */
   private [deepSymbol] = 0;
 
   constructor(filepath: string, options: FileSystemWalkerOptions = {}) {
